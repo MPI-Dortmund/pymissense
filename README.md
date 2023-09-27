@@ -1,19 +1,19 @@
 # pymissense
-PyMissense create the plot and modified pdb as shown in the AlphaMissense Paper for custom proteins.
+PyMissense create the plot and modified pdb as shown in the [AlphaMissense paper](https://www.science.org/doi/10.1126/science.adg7492) for custom proteins.
 
 ## What it does
 
 AlphaMissense allows you to identify regions in your amino acid chain that are critical for protein function. This notebook does two things:
 
-1. It generates a plot similar to Figure 3d of the AlphaMissense paper (https://www.science.org/doi/10.1126/science.adg7492)
+1. It generates a plot similar to Figure 3d of the [AlphaMissense paper](https://www.science.org/doi/10.1126/science.adg7492)
 
-    ![Alt text](fig3d.png)
+    ![Alt text](resources/img/fig3d.png)
 
 2. It creates a modified PDB file where the temperature factor is replaced by the pathogencity predicted by AlphaMissense that allows you to visualize the effect with Chimerax, like Figure 3f of the paper:
 
-    ![Alt text](fig3f.png)
+    ![Alt text](resources/img/fig3f.png)
     
-It does so by replacing the temperature factor in the PDB.
+It does so by replacing the bfactor in the PDB.
 
 ## How to install
 
