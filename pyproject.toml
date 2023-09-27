@@ -1,0 +1,23 @@
+[project]
+name = "pymissense"
+version = "1.0.0"
+description = "PyMissense create the plot and modified pdb as shown in the AlphaMissense Paper"
+readme = "README.md"
+
+authors = [
+    {name = "Thorsten Wagner", email = "thorsten.wagner@mpi-dortmund.mpg.de" },
+    {name = "Tobias Raisch", email = "tobias.raisch@mpi-dortmund.mpg.de" }
+]
+
+dependencies = [
+  "matplotlib", "numpy","requests"
+]
+
+[tool.setuptools]
+packages = ["missense"]
+
+[project.scripts]
+pymissense = "missense.missense:_main_"
+
+[build-system]
+requires = ["setuptools", "wheel", "Cython"]
