@@ -1,6 +1,6 @@
 [project]
 name = "pymissense"
-version = "1.0.0"
+version = "0.99"
 description = "PyMissense create the plot and modified pdb as shown in the AlphaMissense Paper"
 readme = "README.md"
 
