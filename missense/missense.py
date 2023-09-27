@@ -383,6 +383,7 @@ import shutil
 import tempfile
 import urllib
 from urllib.request import urlretrieve
+import sys
 
 import numpy as np
 import requests
@@ -400,7 +401,7 @@ def gen_image(pos_to_val) -> np.array:
     return img
 
 
-def get_data_tuple(uniprot_id: str, max_pos: int = None):
+def get_data_tuple(uniprot_id: str):
     """
     Extracts the raw data for the plot from the tsv file.
     """
@@ -411,10 +412,6 @@ def get_data_tuple(uniprot_id: str, max_pos: int = None):
 
     for g in m:
         position = int(g[0][1:-1])
-        if max_pos is not None:
-            if position > max_pos:
-                break
-
         to = g[0][-1]
         val = float(g[1])
         pos_to_val.append((position, to, val))
@@ -474,7 +471,7 @@ def create_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def make_and_save_plot(pos_to_val, out_file: str) -> np.array:
+def make_and_save_plot(pos_to_val, out_file: str, maxpos: int =None) -> np.array:
     img = gen_image(pos_to_val)
     fig, ax = pyplot.subplots(1, 1)
 
@@ -488,6 +485,8 @@ def make_and_save_plot(pos_to_val, out_file: str) -> np.array:
     yticks = list(range(0, len(np.unique([p[1] for p in pos_to_val]))))
     yticks = [y + 0.5 for y in yticks]
     pyplot.ylim(20, 0)
+    if maxpos is not None:
+        pyplot.xlim(0,maxpos)
     ax.set_yticks(yticks)
 
     ax.set_yticklabels(x_label_list)
@@ -498,9 +497,16 @@ def make_and_save_plot(pos_to_val, out_file: str) -> np.array:
 
     return img
 
-def create_modified_pdb(img: np.array, uniprot_id: str, output_path: str, pdb_pth=None):
+def get_chain(uniprot_id,pdb_pth:str):
+    with open(pdb_pth, mode="rt", encoding="utf-8") as f:
+        doc = f.read()
+        p = r"DBREF\s+." + "{4}" + f"\s(.).+{uniprot_id.upper()}"
+        return re.findall(p,doc)[0]
+
+def create_modified_pdb(img: np.array, uniprot_id: str, output_path: str, pdb_pth=None, chain=None):
     if pdb_pth is not None and os.path.isfile(pdb_pth):
         target_pdb = pdb_pth
+
     else:
         target_pdb = os.path.join(tempfile.gettempdir(), "AF.pdb")
         api_url = f"https://alphafold.ebi.ac.uk/api/prediction/{uniprot_id.upper()}"
@@ -514,6 +520,9 @@ def create_modified_pdb(img: np.array, uniprot_id: str, output_path: str, pdb_pt
         with open(output_path, 'w+') as out_file:
             for line in f:
                 if line.startswith("ATOM "):
+                    if chain is not None and line[21] != chain:
+                        out_file.write(f'{line}')
+                        continue
                     # find positions here https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html
                     pos = int(line[22:26])
                     value = mean_per_pos[pos]
@@ -531,13 +540,24 @@ def _main_():
     download_missense_data()
     os.makedirs(args.output_path, exist_ok=True)
 
-    pos_to_val = get_data_tuple(args.uniprot_id, args.maxacid)
+    # Wenn pdb existiert
+    chain = None
+    if args.pdbpath is not None and os.path.exists(args.pdbpath):
+        try:
+            chain = get_chain(args.uniprot_id, args.pdbpath)
+        except:
+            print(f"Cant find chain for {args.uniprot_id} in {args.pdbpath}")
+            sys.exit(1)
+
+    pos_to_val = get_data_tuple(args.uniprot_id)
+
+
 
     out_fig_pth = os.path.join(args.output_path, f"{args.uniprot_id}.pdf")
-    img_raw_data = make_and_save_plot(pos_to_val, out_fig_pth)
+    img_raw_data = make_and_save_plot(pos_to_val, out_fig_pth, args.maxacid)
     out_pdb_pth = os.path.join(args.output_path, f'{args.uniprot_id}-edit.pdb')
 
-    create_modified_pdb(img_raw_data, args.uniprot_id, out_pdb_pth, args.pdbpath)
+    create_modified_pdb(img_raw_data, args.uniprot_id, out_pdb_pth, args.pdbpath, chain)
 
 
 if __name__ == "__main__":
