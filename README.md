@@ -43,7 +43,7 @@ options:
   --maxacid MAXACID  Maximum squence number to use. (default: None)
 ```
 
-You can provide the positional argumetn `--pdbpath` if you want to use an experimental PDB, otherwise it will instead download the alphafold predicted PDB. One example could be:
+You can provide the optional argument `--pdbpath` if you want to use an experimental PDB, otherwise it will instead download the alphafold predicted PDB. One example could be:
 
 For example, to reproduce [Figure 3D](https://www.science.org/doi/10.1126/science.adg7492#F3) (the middle one) and the generate the PDB shown in [Figure 3F](https://www.science.org/doi/10.1126/science.adg7492#F3) do:
 
