@@ -46,8 +46,11 @@ You can provide the positional argumetn `--pdbpath` if you want to use an experi
 For example, to reproduce [Figure 3D](https://www.science.org/doi/10.1126/science.adg7492#F3) (the middle one) and the generate the PDB shown in [Figure 3F](https://www.science.org/doi/10.1126/science.adg7492#F3) do:
 
 ```
-pymissense Q9UQ13 out --maxacid 200
+wget https://files.rcsb.org/download/7UPI.pdb
+pymissense Q9UQ13 out --maxacid 200 --pdbpath 7upi.pdb 
 ```
+
+Note that the displayed only the first 200 amino acids in the plots and showed the pathogencity in the experimental PDB `7upi`.
 
 ## Contributions
 
