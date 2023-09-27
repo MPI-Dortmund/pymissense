@@ -1,2 +1,52 @@
 # pymissense
 PyMissense create the plot and modified pdb as shown in the AlphaMissense Paper for custom proteins.
+
+## What it does
+
+AlphaMissense allows you to identify regions in your amino acid chain that are critical for protein function. This notebook does two things:
+
+1. It generates a plot similar to Figure 3d of the AlphaMissense paper (https://www.science.org/doi/10.1126/science.adg7492)
+
+    ![Alt text](fig3d.png)
+
+2. It creates a modified PDB file where the temperature factor is replaced by the pathogencity predicted by AlphaMissense that allows you to visualize the effect with Chimerax, like Figure 3f of the paper:
+
+    ![Alt text](fig3f.png)
+    
+It does so by replacing the temperature factor in the PDB.
+
+## How to install
+
+```
+pip install pymissense
+```
+    
+## How to use it
+
+Generate usage is:
+```
+usage: pymissense [-h] [--pdbpath PDBPATH] [--maxacid MAXACID] uniprot_id output_path
+
+AlphaMissense plot and pdb generator
+
+positional arguments:
+  uniprot_id         UNIPROT ID
+  output_path        Output folder
+
+options:
+  -h, --help         show this help message and exit
+  --pdbpath PDBPATH  If defined, it will write the pathogencity as bfactor in that PDB. If its not defined or not existing it will instead download the alphafold predicted PDB (default: None)
+  --maxacid MAXACID  Maximum squence number to use. (default: None)
+```
+
+You can provide the positional argumetn `--pdbpath` if you want to use an experimental PDB, otherwise it will instead download the alphafold predicted PDB. One example could be:
+
+For example, to reproduce Figure 3D (the middle one) and the generate the PDB shown in Figure 3F do:
+
+```
+pymissense Q9UQ13 out --maxacid 200
+```
+
+## Contributions
+
+This script was developed in collaboration with Tobias Raisch 

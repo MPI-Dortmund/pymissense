@@ -80,6 +80,13 @@ def create_parser() -> argparse.ArgumentParser:
         default=None
     )
 
+    parser.add_argument(
+        "--maxacid",
+        type=int,
+        help="Maximum squence number to use.",
+        default=None
+    )
+
     return parser
 
 
@@ -90,7 +97,7 @@ def make_and_save_plot(pos_to_val, out_file: str) -> np.array:
     ax.imshow(img, aspect='auto', interpolation='none', cmap="bwr")
 
     heatmap = ax.pcolor(img, cmap="bwr")
-    pyplot.colorbar(heatmap)
+    pyplot.colorbar(heatmap, label="AM Pathogenicity")
 
     x_label_list = np.unique([p[1] for p in pos_to_val])[::-1]
 
@@ -100,6 +107,8 @@ def make_and_save_plot(pos_to_val, out_file: str) -> np.array:
     ax.set_yticks(yticks)
 
     ax.set_yticklabels(x_label_list)
+    ax.set_ylabel("Alternate amino acid")
+    ax.set_xlabel("Residue sequence number")
 
     pyplot.savefig(out_file, format="pdf", bbox_inches="tight")
 
@@ -138,7 +147,7 @@ def _main_():
     download_missense_data()
     os.makedirs(args.output_path, exist_ok=True)
 
-    pos_to_val = get_data_tuple(args.uniprot_id)
+    pos_to_val = get_data_tuple(args.uniprot_id, args.maxacid)
 
     out_fig_pth = os.path.join(args.output_path, f"{args.uniprot_id}.pdf")
     img_raw_data = make_and_save_plot(pos_to_val, out_fig_pth)
