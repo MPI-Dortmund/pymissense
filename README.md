@@ -11,9 +11,9 @@ AlphaMissense allows you to identify regions in your amino acid chain that are c
 
     ![Alt text](resources/img/3d.png)
 
-2. It creates a modified PDB file where the temperature factor is replaced by the pathogencity predicted by AlphaMissense that allows you to visualize the effect with Chimerax, like [Figure 3F](https://www.science.org/doi/10.1126/science.adg7492#F3) of the paper:
+2. It creates a modified PDB file where the temperature factor is replaced by the pathogencity predicted by AlphaMissense that allows you to visualize the effect with Chimerax, like [Figure 3E](https://www.science.org/doi/10.1126/science.adg7492#F3) of the paper:
 
-    ![Alt text](resources/img/fig3f.png)
+    ![Alt text](resources/img/3e.png)
     
 It does so by replacing the bfactor in the PDB.
 
