@@ -52,7 +52,7 @@ wget https://files.rcsb.org/download/7UPI.pdb
 pymissense Q9UQ13 out --maxacid 200 --pdbpath 7upi.pdb 
 ```
 
-Note that the displayed only the first 200 amino acids in the plots and showed the pathogencity in the experimental PDB `7upi`.
+Note that they displayed only the first 200 amino acids in the plots and showed the pathogencity with the experimental PDB `7upi`.
 
 ## Contributions
 
