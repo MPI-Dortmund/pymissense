@@ -1,0 +1,12 @@
+cff-version: 1.1.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Wagner
+    given-names: Thorsten
+    orcid: https://orcid.org/0000-0002-1550-8275
+  - family-names: Raisch
+    given-names: Tobias
+    oricid: https://orcid.org/0000-0002-6531-3812
+title: MPI-Dortmund/pymissense: v0.99
+version: v0.99
+date-released: 2023-09-27
