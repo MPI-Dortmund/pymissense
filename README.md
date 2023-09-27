@@ -1,7 +1,7 @@
 [![DOI](https://zenodo.org/badge/697276360.svg)](https://zenodo.org/badge/latestdoi/697276360)
 
 # pymissense
-PyMissense creates the plot and modified pdb as shown in the [AlphaMissense paper](https://www.science.org/doi/10.1126/science.adg7492) for custom proteins.
+PyMissense creates the pathogencity plot and modified pdb as shown in the [AlphaMissense paper](https://www.science.org/doi/10.1126/science.adg7492) for custom proteins.
 
 ## What it does
 
