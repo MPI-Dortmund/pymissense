@@ -555,9 +555,11 @@ def _main_():
 
     out_fig_pth = os.path.join(args.output_path, f"{args.uniprot_id}.pdf")
     img_raw_data = make_and_save_plot(pos_to_val, out_fig_pth, args.maxacid)
+    print(f"Save plot to {out_fig_pth}")
     out_pdb_pth = os.path.join(args.output_path, f'{args.uniprot_id}-edit.pdb')
-
     create_modified_pdb(img_raw_data, args.uniprot_id, out_pdb_pth, args.pdbpath, chain)
+    print(f"Save modified PDB to {out_pdb_pth}")
+
 
 
 if __name__ == "__main__":
