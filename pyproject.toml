@@ -1,6 +1,6 @@
 [project]
 name = "pymissense"
-version = "1.0.0"
+dynamic = ["version"]
 description = "PyMissense create the plot and modified pdb as shown in the AlphaMissense Paper"
 readme = "README.md"
 
@@ -20,4 +20,6 @@ packages = ["missense"]
 pymissense = "missense.missense:_main_"
 
 [build-system]
-requires = ["setuptools", "wheel", "Cython"]
+requires = ["setuptools>=60", "setuptools-scm>=8.0",
+    "wheel",
+    "Cython"]
