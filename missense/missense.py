@@ -439,6 +439,9 @@ def download_missense_data():
 
 
 def create_parser() -> argparse.ArgumentParser:
+    '''
+    Create the argument parser
+    '''
     parser = argparse.ArgumentParser(
             description="AlphaMissense plot and pdb generator",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -472,8 +475,12 @@ def create_parser() -> argparse.ArgumentParser:
 
 
 def make_and_save_plot(pos_to_val, out_file: str, maxpos: int =None) -> np.array:
+    """
+    Create the plot at saves it to disk.
+    :return The raw data for the plot
+    """
     img = gen_image(pos_to_val)
-    fig, ax = pyplot.subplots(1, 1)
+    _, ax = pyplot.subplots(1, 1)
 
     ax.imshow(img, aspect='auto', interpolation='none', cmap="bwr")
 
@@ -498,26 +505,32 @@ def make_and_save_plot(pos_to_val, out_file: str, maxpos: int =None) -> np.array
     return img
 
 def get_chain(uniprot_id,pdb_pth:str):
+    '''
+    A PDB might have multiple chains, where only one belongs to a certain UNIPROT-ID. This function tries to retrieve the corresponding chain.
+    '''
     with open(pdb_pth, mode="rt", encoding="utf-8") as f:
         doc = f.read()
         p = r"DBREF\s+." + "{4}" + rf"\s(.).+{uniprot_id.upper()}"
         return re.findall(p,doc)[0]
 
 def create_modified_pdb(img: np.array, uniprot_id: str, output_path: str, pdb_pth=None, chain=None):
+    '''
+    Replaces the bfactor column with the patho score.
+    '''
     if pdb_pth is not None and os.path.isfile(pdb_pth):
         target_pdb = pdb_pth
 
     else:
         target_pdb = os.path.join(tempfile.gettempdir(), "AF.pdb")
         api_url = f"https://alphafold.ebi.ac.uk/api/prediction/{uniprot_id.upper()}"
-        response = requests.get(api_url)
+        response = requests.get(api_url, timeout=20)
         r = response.json()
         urllib.request.urlretrieve(r[0]['pdbUrl'], target_pdb)
 
     mean_per_pos = img.mean(axis=0)
 
-    with open(target_pdb) as f:
-        with open(output_path, 'w+') as out_file:
+    with open(target_pdb, encoding="utf-8") as f:
+        with open(output_path, 'w+', encoding="utf-8") as out_file:
             for line in f:
                 if line.startswith("ATOM "):
                     if chain is not None and line[21] != chain:
@@ -542,7 +555,7 @@ def _run(uniprot_id: str, output_path: str, pdbpath: str, maxacid: int):
     if pdbpath is not None and os.path.exists(pdbpath):
         try:
             chain = get_chain(uniprot_id, pdbpath)
-        except:
+        except IndexError:
             print(f"Cant find chain for {uniprot_id} in {pdbpath}")
             sys.exit(1)
 
