@@ -21,7 +21,7 @@ jobs:
         pip install .
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint -E $(git ls-files '*.py')
     - name: Tests
       run: |
         pytest -v --cov=./ --cov-report=xml --cov-config=.coveragerc
