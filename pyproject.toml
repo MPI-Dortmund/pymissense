@@ -20,6 +20,6 @@ packages = ["missense"]
 pymissense = "missense.missense:_main_"
 
 [build-system]
-requires = ["setuptools>=60", "setuptools-scm>=8.0",
-    "wheel",
-    "Cython"]
+requires = ["setuptools>=60", "setuptools-scm>=8.0", "wheel", "Cython"]
+
+[tool.setuptools_scm]
