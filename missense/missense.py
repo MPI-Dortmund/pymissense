@@ -534,31 +534,31 @@ def create_modified_pdb(img: np.array, uniprot_id: str, output_path: str, pdb_pt
                 else:
                     out_file.write(f'{line}')
 
+def _run(uniprot_id: str, output_path: str, pdbpath: str, maxacid: int):
+    download_missense_data()
+    os.makedirs(output_path, exist_ok=True)
+
+    chain = None
+    if pdbpath is not None and os.path.exists(pdbpath):
+        try:
+            chain = get_chain(uniprot_id, pdbpath)
+        except:
+            print(f"Cant find chain for {uniprot_id} in {pdbpath}")
+            sys.exit(1)
+
+    pos_to_val = get_data_tuple(uniprot_id)
+
+    out_fig_pth = os.path.join(output_path, f"{uniprot_id}.pdf")
+    img_raw_data = make_and_save_plot(pos_to_val, out_fig_pth, maxacid)
+    print(f"Save plot to {out_fig_pth}")
+    out_pdb_pth = os.path.join(output_path, f'{uniprot_id}-edit.pdb')
+    create_modified_pdb(img_raw_data, uniprot_id, out_pdb_pth, pdbpath, chain)
+    print(f"Save modified PDB to {out_pdb_pth}")
 
 def _main_():
     args = create_parser().parse_args()
-    download_missense_data()
-    os.makedirs(args.output_path, exist_ok=True)
+    _run(args.uniprot_id, args.output_path, args.pdbpath, args.maxacid)
 
-    # Wenn pdb existiert
-    chain = None
-    if args.pdbpath is not None and os.path.exists(args.pdbpath):
-        try:
-            chain = get_chain(args.uniprot_id, args.pdbpath)
-        except:
-            print(f"Cant find chain for {args.uniprot_id} in {args.pdbpath}")
-            sys.exit(1)
-
-    pos_to_val = get_data_tuple(args.uniprot_id)
-
-
-
-    out_fig_pth = os.path.join(args.output_path, f"{args.uniprot_id}.pdf")
-    img_raw_data = make_and_save_plot(pos_to_val, out_fig_pth, args.maxacid)
-    print(f"Save plot to {out_fig_pth}")
-    out_pdb_pth = os.path.join(args.output_path, f'{args.uniprot_id}-edit.pdb')
-    create_modified_pdb(img_raw_data, args.uniprot_id, out_pdb_pth, args.pdbpath, chain)
-    print(f"Save modified PDB to {out_pdb_pth}")
 
 
 
