@@ -3,8 +3,15 @@ from missense import missense as ms
 import tempfile
 import os
 import hashlib
+import shutil
 
 class MyTest(unittest.TestCase):
+
+    def tearDown(self) -> None:
+        try:
+            os.remove(os.path.join(tempfile.gettempdir(), "alpha.tsv"))
+        except:
+            print("nothing to delete")
 
     def calc_hash(self, filename):
         with open(filename, "rb") as f:
@@ -13,6 +20,10 @@ class MyTest(unittest.TestCase):
             return readable_hash
 
     def test_pdf_and_and_are_generated(self):
+
+        shutil.copyfile(os.path.join(os.path.dirname(__file__), "../resources/tests/Q9UQ13/alpha.tsv"),
+                        os.path.join(tempfile.gettempdir(), "alpha.tsv"))
+
         with tempfile.TemporaryDirectory() as tmpdirname:
             ms._run(uniprot_id="Q9UQ13",
                     output_path=tmpdirname,
@@ -24,6 +35,10 @@ class MyTest(unittest.TestCase):
             self.assertEqual(True, os.path.exists(os.path.join(tmpdirname, "Q9UQ13-edit.pdb")))
 
     def test_pdb_check_with_reference(self):
+
+        shutil.copyfile(os.path.join(os.path.dirname(__file__), "../resources/tests/Q9UQ13/alpha.tsv"),
+                        os.path.join(tempfile.gettempdir(), "alpha.tsv"))
+
         with tempfile.TemporaryDirectory() as tmpdirname:
             ms._run(uniprot_id="Q9UQ13",
                     output_path=tmpdirname,
@@ -39,6 +54,10 @@ class MyTest(unittest.TestCase):
             self.assertTrue( ref_hash == new_hash)
 
     def test_pdb_check_with_reference_with_pdb(self):
+
+        shutil.copyfile(os.path.join(os.path.dirname(__file__), "../resources/tests/Q9UQ13/alpha.tsv"),
+                        os.path.join(tempfile.gettempdir(), "alpha.tsv"))
+
         with tempfile.TemporaryDirectory() as tmpdirname:
             ms._run(uniprot_id="Q9UQ13",
                     output_path=tmpdirname,
