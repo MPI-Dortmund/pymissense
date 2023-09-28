@@ -405,9 +405,9 @@ def get_data_tuple(uniprot_id: str):
     """
     Extracts the raw data for the plot from the tsv file.
     """
-    with open(os.path.join(tempfile.gettempdir(), "alpha.tsv")) as f:
+    with open(os.path.join(tempfile.gettempdir(), "alpha.tsv"), encoding="utf-8") as f:
         doc = f.read()
-        m = re.findall(uniprot_id.upper() + "\t(.\d+.)\t(\d.\d+)", doc)
+        m = re.findall(uniprot_id.upper() + r"\t(.\d+.)\t(\d.\d+)", doc)
     pos_to_val = []
 
     for g in m:
@@ -424,7 +424,7 @@ def download_missense_data():
     '''
     alphafile=os.path.join(tempfile.gettempdir(), "alpha.tsv")
     if not os.path.exists(alphafile):
-        url = ("https://zenodo.org/record/8208688/files/AlphaMissense_aa_substitutions.tsv.gz?download=1/")
+        url = "https://zenodo.org/record/8208688/files/AlphaMissense_aa_substitutions.tsv.gz?download=1/"
         filename = os.path.join(tempfile.gettempdir(), "alpha.tsv.gz")
         print("Download to", filename, " ...")
         urlretrieve(url, filename)
@@ -500,7 +500,7 @@ def make_and_save_plot(pos_to_val, out_file: str, maxpos: int =None) -> np.array
 def get_chain(uniprot_id,pdb_pth:str):
     with open(pdb_pth, mode="rt", encoding="utf-8") as f:
         doc = f.read()
-        p = r"DBREF\s+." + "{4}" + f"\s(.).+{uniprot_id.upper()}"
+        p = r"DBREF\s+." + "{4}" + rf"\s(.).+{uniprot_id.upper()}"
         return re.findall(p,doc)[0]
 
 def create_modified_pdb(img: np.array, uniprot_id: str, output_path: str, pdb_pth=None, chain=None):
