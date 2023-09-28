@@ -1,0 +1,53 @@
+name: Pylint
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint pytest pytest-coverage
+        pip install .
+    - name: Analysing the code with pylint
+      run: |
+        pylint -E $(git ls-files '*.py')
+    - name: Tests
+      run: |
+        pytest -v --cov=./ --cov-report=xml --cov-config=.coveragerc
+  deploy:
+      # this will run when you have tagged a commit, starting with "v*"
+      # and requires that you have put your twine API key in your
+      # github secrets (see readme for details)
+      needs: [ build ]
+      runs-on: ubuntu-latest
+      if: contains(github.ref, 'tags')
+      steps:
+        - uses: actions/checkout@v3
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: "3.x"
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -U setuptools setuptools_scm wheel twine build
+  
+        - name: Build and publish
+          env:
+            TWINE_USERNAME: __token__
+            TWINE_PASSWORD: ${{ secrets.TWINE_API_KEY }}
+          run: |
+            git tag
+            python -m build .
+            twine upload dist/*
