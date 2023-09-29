@@ -401,11 +401,13 @@ def gen_image(pos_to_val) -> np.array:
     return img
 
 
-def get_data_tuple(uniprot_id: str):
+def get_data_tuple(uniprot_id: str, tsv_path: str = None):
     """
     Extracts the raw data for the plot from the tsv file.
     """
-    with open(os.path.join(tempfile.gettempdir(), "alpha.tsv"), encoding="utf-8") as f:
+    if tsv_path is None:
+        tsv_path = os.path.join(tempfile.gettempdir(), "alpha.tsv")
+    with open(tsv_path, encoding="utf-8") as f:
         doc = f.read()
         m = re.findall(uniprot_id.upper() + r"\t(.\d+.)\t(\d.\d+)", doc)
     pos_to_val = []
@@ -455,6 +457,13 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "output_path",
         help="Output folder",
+    )
+
+    parser.add_argument(
+        "--tsv",
+        type=str,
+        help="You can provide the path to the tsv file if you want to skip the download.",
+        default=None
     )
 
     parser.add_argument(
@@ -547,8 +556,17 @@ def create_modified_pdb(img: np.array, uniprot_id: str, output_path: str, pdb_pt
                 else:
                     out_file.write(f'{line}')
 
-def _run(uniprot_id: str, output_path: str, pdbpath: str, maxacid: int):
-    download_missense_data()
+def _run(uniprot_id: str,
+         output_path: str,
+         tsvpath: str,
+         pdbpath: str,
+         maxacid: int):
+
+    if tsvpath is None or os.path.exists(tsvpath)==False:
+        tsvpath=None
+        download_missense_data()
+
+
     os.makedirs(output_path, exist_ok=True)
 
     chain = None
@@ -559,7 +577,11 @@ def _run(uniprot_id: str, output_path: str, pdbpath: str, maxacid: int):
             print(f"Cant find chain for {uniprot_id} in {pdbpath}")
             sys.exit(1)
 
-    pos_to_val = get_data_tuple(uniprot_id)
+    pos_to_val = get_data_tuple(uniprot_id=uniprot_id, tsv_path=tsvpath)
+
+    if len(pos_to_val) == 0:
+        print(f"Could not find any data in the AlphaMissense database for uniprot id {uniprot_id}")
+        sys.exit(1)
 
     out_fig_pth = os.path.join(output_path, f"{uniprot_id}.pdf")
     img_raw_data = make_and_save_plot(pos_to_val, out_fig_pth, maxacid)
@@ -570,7 +592,11 @@ def _run(uniprot_id: str, output_path: str, pdbpath: str, maxacid: int):
 
 def _main_():
     args = create_parser().parse_args()
-    _run(args.uniprot_id, args.output_path, args.pdbpath, args.maxacid)
+    _run(uniprot_id=args.uniprot_id,
+         output_path=args.output_path,
+         pdbpath=args.pdbpath,
+         maxacid=args.maxacid,
+         tsvpath=args.tsv)
 
 
 
