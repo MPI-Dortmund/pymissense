@@ -45,7 +45,7 @@ options:
 
 You can provide the optional argument `--pdbpath` if you want to use an experimental PDB, otherwise it will instead download the alphafold predicted PDB.
 
-For example, to reproduce [Figure 3D](https://www.science.org/doi/10.1126/science.adg7492#F3) (the middle one) and the generate the PDB shown in [Figure 3E](https://www.science.org/doi/10.1126/science.adg7492#F3) do:
+For example, to reproduce [Figure 3D](https://www.science.org/doi/10.1126/science.adg7492#F3) (the middle one) and generates the PDB shown in [Figure 3E](https://www.science.org/doi/10.1126/science.adg7492#F3) do:
 
 ```
 wget https://files.rcsb.org/download/7UPI.pdb

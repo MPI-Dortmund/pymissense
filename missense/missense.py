@@ -462,7 +462,7 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--tsv",
         type=str,
-        help="You can provide the path to the tsv file if you want to skip the downloading part.",
+        help="You can provide the path to the tsv file if you want to skip the download.",
         default=None
     )
 
@@ -578,6 +578,10 @@ def _run(uniprot_id: str,
             sys.exit(1)
 
     pos_to_val = get_data_tuple(uniprot_id=uniprot_id, tsv_path=tsvpath)
+
+    if len(pos_to_val) == 0:
+        print(f"Could not find any data in the AlphaMissense database for uniprot id {uniprot_id}")
+        sys.exit(1)
 
     out_fig_pth = os.path.join(output_path, f"{uniprot_id}.pdf")
     img_raw_data = make_and_save_plot(pos_to_val, out_fig_pth, maxacid)
