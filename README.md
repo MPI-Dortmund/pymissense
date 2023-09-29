@@ -40,7 +40,7 @@ positional arguments:
 options:
   -h, --help         show this help message and exit
   --tsv TSV          You can provide the path to the tsv file if you want to skip the download. (default: None)
-  --pdbpath PDBPATH  If defined, it will write the pathogencity as bfactor in that PDB. If its not defined or not existing it will instead download the alphafold predicted PDB (default: None)
+  --pdbpath PDBPATH  If defined, it will write the pathogenicity as bfactor in that PDB. If its not defined or not existing it will instead download the alphafold predicted PDB (default: None)
   --maxacid MAXACID  Maximum squence number to use in the plot. (default: None)
 ```
 

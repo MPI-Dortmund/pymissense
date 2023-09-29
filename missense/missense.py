@@ -469,7 +469,7 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--pdbpath",
         type=str,
-        help="If defined, it will write the pathogencity as bfactor in that PDB. If its not defined or not existing it will instead download the alphafold predicted PDB",
+        help="If defined, it will write the pathogenicity as bfactor in that PDB. If its not defined or not existing it will instead download the alphafold predicted PDB",
         default=None
     )
 
