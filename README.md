@@ -5,7 +5,7 @@ PyMissense creates the pathogencity plot and the modified pdb as shown in the [A
 
 ## What it does
 
-AlphaMissense allows you to identify regions in your amino acid chain that are critical for protein function. This skript does two things:
+AlphaMissense allows you to identify regions in your amino acid chain that are critical for protein function. This script does two things:
 
 1. It generates a plot similar to [Figure 3D](https://www.science.org/doi/10.1126/science.adg7492#F3) of the [AlphaMissense paper](https://www.science.org/doi/10.1126/science.adg7492)
 
