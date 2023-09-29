@@ -8,7 +8,7 @@ authors:
   given-names: "Tobias"
   oricid: "https://orcid.org/0000-0002-6531-3812"
 title: "pymissense"
-version: 1.0.2
+version: 1.1.0
 doi: 10.5281/zenodo.8383401
 date-released: 2023-09-27
 url: "https://github.com/MPI-Dortmund/pymissense"
