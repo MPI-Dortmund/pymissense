@@ -29,7 +29,7 @@ pip install pymissense
 
 Generate usage is:
 ```
-usage: pymissense [-h] [--pdbpath PDBPATH] [--maxacid MAXACID] uniprot_id output_path
+usage: pymissense[-h] [--tsv TSV] [--pdbpath PDBPATH] [--maxacid MAXACID] uniprot_id output_path
 
 AlphaMissense plot and pdb generator
 
@@ -39,8 +39,9 @@ positional arguments:
 
 options:
   -h, --help         show this help message and exit
+  --tsv TSV          You can provide the path to the tsv file if you want to skip the download. (default: None)
   --pdbpath PDBPATH  If defined, it will write the pathogencity as bfactor in that PDB. If its not defined or not existing it will instead download the alphafold predicted PDB (default: None)
-  --maxacid MAXACID  Maximum squence number to use. (default: None)
+  --maxacid MAXACID  Maximum squence number to use in the plot. (default: None)
 ```
 
 You can provide the optional argument `--pdbpath` if you want to use an experimental PDB, otherwise it will instead download the alphafold predicted PDB.
