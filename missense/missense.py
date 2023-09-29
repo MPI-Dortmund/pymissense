@@ -476,7 +476,7 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--maxacid",
         type=int,
-        help="Maximum squence number to use.",
+        help="Maximum sequence number to use in the plot.",
         default=None
     )
 
