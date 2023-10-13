@@ -489,12 +489,12 @@ def make_and_save_plot(pos_to_val, out_file: str, maxpos: int =None) -> np.array
     :return The raw data for the plot
     """
     img = gen_image(pos_to_val)
-    _, ax = pyplot.subplots(1, 1)
+    fig, (ax, ax2) = pyplot.subplots(2,1, gridspec_kw={'height_ratios': [3,1]})
 
     ax.imshow(img, aspect='auto', interpolation='none', cmap="bwr")
 
     heatmap = ax.pcolor(img, cmap="bwr")
-    pyplot.colorbar(heatmap, label="AM Pathogenicity")
+
 
     x_label_list = np.unique([p[1] for p in pos_to_val])[::-1]
 
@@ -509,6 +509,14 @@ def make_and_save_plot(pos_to_val, out_file: str, maxpos: int =None) -> np.array
     ax.set_ylabel("Alternate amino acid")
     ax.set_xlabel("Residue sequence number")
 
+    ax2.plot(np.mean(img, axis=0))
+    ax2.set_ylim(0, 1.1)
+    ax2.set_xticks(ax.get_xticks())
+    ax2.set_ylabel("Mean Pathogenicity")
+    ax2.set_xlabel("Residue sequence number")
+    ax2.margins(x=0, tight=True)
+
+    fig.colorbar(heatmap, ax=(ax, ax2), shrink=0.6, label="AM Pathogenicity")
     pyplot.savefig(out_file, format="pdf", bbox_inches="tight")
 
     return img
