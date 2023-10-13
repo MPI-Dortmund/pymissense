@@ -426,12 +426,17 @@ def download_missense_data():
     '''
     alphafile=os.path.join(tempfile.gettempdir(), "alpha.tsv")
     if not os.path.exists(alphafile):
-        url = "https://zenodo.org/record/8208688/files/AlphaMissense_aa_substitutions.tsv.gz?download=1/"
+        print("Find zenodo record ID ...", end=" ", flush=True)
+        url_doi = "https://doi.org/10.5281/zenodo.8360242"
+        r = requests.get(url_doi)
+        record_id = r.url.split('/')[-1]
+        print(f"{record_id}")
+        url = f"https://zenodo.org/records/{record_id}/files/AlphaMissense_aa_substitutions.tsv.gz?download=1"
         filename = os.path.join(tempfile.gettempdir(), "alpha.tsv.gz")
-        print("Download to", filename, " ...")
+        print(f"Download {url} to {filename} ...", end=" ", flush=True)
         urlretrieve(url, filename)
-        print("Download done!")
-        print("Decompress...")
+        print("done!")
+        print("Decompress...", end=" ", flush=True)
         with gzip.open(filename,'r') as f_in, open(alphafile, 'wb') as f_out:
             shutil.copyfileobj(f_in,f_out)
         print("Done: ", alphafile)
