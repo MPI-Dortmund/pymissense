@@ -501,8 +501,11 @@ def make_and_save_plot(pos_to_val, out_file: str, maxpos: int =None) -> np.array
     yticks = list(range(0, len(np.unique([p[1] for p in pos_to_val]))))
     yticks = [y + 0.5 for y in yticks]
     pyplot.ylim(20, 0)
+
     if maxpos is not None:
-        pyplot.xlim(0,maxpos)
+        ax.set_xlim(0, maxpos)
+        ax2.set_xlim(0, maxpos)
+
     ax.set_yticks(yticks)
 
     ax.set_yticklabels(x_label_list)
@@ -511,10 +514,14 @@ def make_and_save_plot(pos_to_val, out_file: str, maxpos: int =None) -> np.array
 
     ax2.plot(np.mean(img, axis=0))
     ax2.set_ylim(0, 1.1)
-    ax2.set_xticks(ax.get_xticks())
+    ax2.set_xticks(ax.get_xticks()[1:])
     ax2.set_ylabel("Mean Pathogenicity")
     ax2.set_xlabel("Residue sequence number")
     ax2.margins(x=0, tight=True)
+
+    pyplot.subplots_adjust(hspace=0.35)
+
+
 
     fig.colorbar(heatmap, ax=(ax, ax2), shrink=0.6, label="AM Pathogenicity")
     pyplot.savefig(out_file, format="pdf", bbox_inches="tight")
