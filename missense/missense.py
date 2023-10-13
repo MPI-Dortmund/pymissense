@@ -426,12 +426,17 @@ def download_missense_data():
     '''
     alphafile=os.path.join(tempfile.gettempdir(), "alpha.tsv")
     if not os.path.exists(alphafile):
-        url = "https://zenodo.org/record/8208688/files/AlphaMissense_aa_substitutions.tsv.gz?download=1/"
+        print("Find zenodo record ID ...", end=" ", flush=True)
+        url_doi = "https://doi.org/10.5281/zenodo.8360242"
+        r = requests.get(url_doi)
+        record_id = r.url.split('/')[-1]
+        print(f"{record_id}")
+        url = f"https://zenodo.org/records/{record_id}/files/AlphaMissense_aa_substitutions.tsv.gz?download=1"
         filename = os.path.join(tempfile.gettempdir(), "alpha.tsv.gz")
-        print("Download to", filename, " ...")
+        print(f"Download {url} to {filename} ...", end=" ", flush=True)
         urlretrieve(url, filename)
-        print("Download done!")
-        print("Decompress...")
+        print("done!")
+        print("Decompress...", end=" ", flush=True)
         with gzip.open(filename,'r') as f_in, open(alphafile, 'wb') as f_out:
             shutil.copyfileobj(f_in,f_out)
         print("Done: ", alphafile)
@@ -489,26 +494,41 @@ def make_and_save_plot(pos_to_val, out_file: str, maxpos: int =None) -> np.array
     :return The raw data for the plot
     """
     img = gen_image(pos_to_val)
-    _, ax = pyplot.subplots(1, 1)
+    fig, (ax, ax2) = pyplot.subplots(2,1, gridspec_kw={'height_ratios': [3,1]})
 
     ax.imshow(img, aspect='auto', interpolation='none', cmap="bwr")
 
     heatmap = ax.pcolor(img, cmap="bwr")
-    pyplot.colorbar(heatmap, label="AM Pathogenicity")
+
 
     x_label_list = np.unique([p[1] for p in pos_to_val])[::-1]
 
     yticks = list(range(0, len(np.unique([p[1] for p in pos_to_val]))))
     yticks = [y + 0.5 for y in yticks]
     pyplot.ylim(20, 0)
+
     if maxpos is not None:
-        pyplot.xlim(0,maxpos)
+        ax.set_xlim(0, maxpos)
+        ax2.set_xlim(0, maxpos)
+
     ax.set_yticks(yticks)
 
     ax.set_yticklabels(x_label_list)
     ax.set_ylabel("Alternate amino acid")
     ax.set_xlabel("Residue sequence number")
 
+    ax2.plot(np.mean(img, axis=0))
+    ax2.set_ylim(0, 1.1)
+    ax2.set_xticks(ax.get_xticks()[1:])
+    ax2.set_ylabel("Mean Pathogenicity")
+    ax2.set_xlabel("Residue sequence number")
+    ax2.margins(x=0, tight=True)
+
+    pyplot.subplots_adjust(hspace=0.35)
+
+
+
+    fig.colorbar(heatmap, ax=(ax, ax2), shrink=0.6, label="AM Pathogenicity")
     pyplot.savefig(out_file, format="pdf", bbox_inches="tight")
 
     return img
